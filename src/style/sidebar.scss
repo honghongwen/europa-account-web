@@ -1,0 +1,56 @@
+.t-sidebar {
+  width: 200px;
+  overflow: hidden;
+  height: calc(100% - 50px);
+  position: fixed;
+  top: 50px;
+  left: 0px;
+
+  .el-scrollbar {
+    height: 100%;
+
+    .el-scrollbar__wrap {
+      height: 100%;
+      overflow-x: hidden !important;
+
+      .el-scrollbar__view {
+        height: 100%;
+
+        .el-menu {
+          width: 200px;
+          height: 100%;
+          background-color: #3A3F51;
+
+          .el-submenu__title:hover {
+            background-color: #3A3F51;
+          }
+
+          li {
+            background-color: #3A3F51;
+          }
+
+          a {
+            width: 100%;
+            display: block;
+          }
+
+          a :hover {
+            background-color: #242425e5;
+          }
+
+          .el-menu-item {
+            color: #909399;
+          }
+
+          .el-submenu__title {
+            color: #909399;
+          }
+
+
+
+        }
+
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+.mainPage {
+  height: calc(100% - 50px);
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  margin-top: 50px;
+  transition: all 0.3s;
+
+  &>div {
+    padding: 36px 30px;
+  }
+}

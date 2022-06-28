@@ -1,0 +1,72 @@
+@import './layout.scss';
+@import './sidebar.scss';
+@import './mainpage.scss';
+@import './transition.scss';
+
+html {
+  height: 100%;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+fieldset,
+input,
+textarea,
+p,
+blockquote,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 12px/1.5 Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, SimSun, sans-serif;
+}
+
+body,
+#app,
+.wrapper {
+  height: calc(100% - 50px);
+  background-color: #f0f3f4;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.input-width {
+  width: 180px !important;
+  margin-right: 10px !important;
+}
+
+.input-width-short {
+  width: 100px !important;
+  margin-right: 10px !important;
+}
+
+.input-width-normal {
+  width: 150px !important;
+  margin-right: 10px !important;
+}
+
+.input-width-large {
+  width: 280px !important;
+  margin-right: 10px !important;
+}
