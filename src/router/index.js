@@ -96,6 +96,11 @@ export const currencyRoutes = [{
         component: () => import('@/views/system/member'),
       },
       {
+        path: 'memberInfo',
+        name: 'MemberInfo',
+        component: () => import('@/views/system/memberInfo'),
+      },
+      {
         path: 'setting',
         name: 'Setting',
         component: () => import('@/views/system/setting'),

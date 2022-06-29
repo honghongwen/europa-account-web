@@ -33,3 +33,10 @@ export function listMember(data) {
     data
   })
 }
+
+export function getMember(id) {
+  return request({
+    url: '/member/get?id=' + id,
+    method: 'get',
+  })
+}
