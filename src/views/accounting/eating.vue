@@ -6,7 +6,7 @@
           <span class="t-query-group-text">地址：</span>
           <el-input
             placeholder="请输入消费地址"
-            v-model="tableQuery.company"
+            v-model="tableQuery.address"
             class="input-width"
             clearable
           >
@@ -22,21 +22,12 @@
           >
           </el-input>
         </div>
-        <div class="flex-3">
-          <span class="t-query-group-text">金额：</span>
-          <el-input
-            placeholder="请选择数目"
-            v-model="tableQuery.mobile"
-            class="input-width"
-            clearable
-          >
-          </el-input>
-        </div>
       </div>
       <div class="t_btn_group">
         <div class="t_btn_group_left">
           <el-button type="primary" icon="el-icon-s-custom" @click="handleAdd"
-            >新增</el-button
+          >新增
+          </el-button
           >
           <el-button type="primary" icon="el-icon-files">导入</el-button>
         </div>
@@ -44,8 +35,9 @@
           <el-button
             type="primary"
             icon="el-icon-search"
-            @click="getSendManList"
-            >查询</el-button
+            @click="getRecordList"
+          >查询
+          </el-button
           >
         </div>
       </div>
@@ -57,18 +49,16 @@
           stripe
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection"> </el-table-column>
+          <el-table-column type="selection"></el-table-column>
           <el-table-column prop="id" label="ID"></el-table-column>
-          <el-table-column prop="name" label="人员"> </el-table-column>
-          <el-table-column prop="mobile" label="金额"> </el-table-column>
-          <el-table-column prop="company" label="消费地址"> </el-table-column>
-          <el-table-column prop="company" label="登记时间"> </el-table-column>
-          <el-table-column prop="company" label="修改时间"> </el-table-column>
-          <el-table-column prop="address" label="说明">
+          <el-table-column prop="name" label="消费人"></el-table-column>
+          <el-table-column prop="amount" label="金额"></el-table-column>
+          <el-table-column prop="address" label="消费地址">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>
-                  {{ scope.row.province }}{{ scope.row.city }}{{ scope.row.area
+                  {{ scope.row.province }}{{ scope.row.city }}{{
+                    scope.row.area
                   }}{{ scope.row.town }}
                 </p>
                 <div slot="reference" class="name-wrapper">
@@ -77,12 +67,15 @@
               </el-popover>
             </template>
           </el-table-column>
+          <el-table-column prop="createTime" label="登记时间"></el-table-column>
+          <el-table-column prop="updateTime" label="修改时间"></el-table-column>
           <el-table-column prop="operation" label="操作">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)"
-                >编辑</el-button
+              >编辑
+              </el-button
               >
               <el-popconfirm
                 title="确定删除此消费记录吗？"
@@ -93,7 +86,7 @@
                   slot="reference"
                   type="danger"
                   @click="handleDelete(scope.$index, scope.row)"
-                  >删除
+                >删除
                 </el-button>
               </el-popconfirm>
             </template>
@@ -117,9 +110,9 @@
 
       <!-- Form -->
       <el-dialog :title="dialog_title" :visible.sync="dialogFormVisible">
-        <el-form :model="form" :rules="rules" ref="sendManForm">
+        <el-form :model="form" :rules="rules" ref="expensesRecordForm">
           <el-form-item
-            label="寄件人："
+            label="消费人："
             :label-width="formLabelWidth"
             prop="name"
           >
@@ -130,19 +123,12 @@
             ></el-input>
           </el-form-item>
           <el-form-item
-            label="寄件人手机："
+            label="消费金额："
             :label-width="formLabelWidth"
             prop="mobile"
           >
             <el-input
-              v-model="form.mobile"
-              autocomplete="off"
-              class="input-width"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="寄件人电话：" :label-width="formLabelWidth">
-            <el-input
-              v-model="form.phone"
+              v-model="form.amount"
               autocomplete="off"
               class="input-width"
             ></el-input>
@@ -170,12 +156,12 @@
             ></el-input>
           </el-form-item>
           <el-form-item
-            label="寄件人公司："
+            label="消费备注："
             :label-width="formLabelWidth"
             prop="company"
           >
             <el-input
-              v-model="form.company"
+              v-model="form.mark"
               autocomplete="off"
               class="input-width"
             ></el-input>
@@ -183,7 +169,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitAddSendMan">确 定</el-button>
+          <el-button type="primary" @click="submitAddRecord">确 定</el-button>
         </div>
       </el-dialog>
     </el-card>
@@ -192,13 +178,13 @@
 
 <script>
 import PageNation from "@/components/pageNation";
-import { RegionGroup, RegionText } from "v-region";
+import {RegionGroup, RegionText} from "v-region";
 import {
-  addSendMan,
-  delSendMan,
-  editSendMan,
-  listSendMan,
-} from "@/api/sendMan";
+  addRecord,
+  delRecord,
+  editRecord,
+  listRecord,
+} from "@/api/expensesRecord";
 
 export default {
   components: {
@@ -208,49 +194,47 @@ export default {
   },
   data() {
     return {
-      dialog_title: "新增常用收件人",
+      dialog_title: "新增吃喝消费",
       dialog_edit_type: 0, // 0-新增1-编辑
       total: 0,
       tableQuery: {
-        company: "",
         name: "",
         address: "",
-        mobile: "",
         pageNum: 1,
         pageSize: 10,
+        type: 1,
       },
       tableData: [
         {
           id: "",
           name: "",
-          mobile: "",
-          company: "",
+          amount: "",
+          mark: "",
           address: "",
         },
       ],
       dialogFormVisible: false,
       form: {
         name: "",
-        mobile: "",
-        phone: "",
+        amount: "",
         region: {},
         regionJson: "",
-        address: "",
-        company: "",
+        mark: "",
+        type: 1,
       },
       formLabelWidth: "120px",
       rules: {
         name: [
           {
             required: true,
-            message: "请输入寄件人名",
+            message: "请输入消费人名",
             trigger: "blur",
           },
         ],
-        mobile: [
+        amount: [
           {
             required: true,
-            message: "请输入寄件人手机号",
+            message: "请输入消费金额",
             trigger: "blur",
           },
         ],
@@ -275,30 +259,27 @@ export default {
     regionChange(data) {
       this.form.regionJson = JSON.stringify(data);
     },
-    submitAddSendMan() {
-      this.$refs["sendManForm"].validate((valid) => {
-        debugger;
+    submitAddRecord() {
+      this.$refs["expensesRecordForm"].validate((valid) => {
         if (valid) {
           // 新增收件人
           if (this.dialog_edit_type === 0) {
-            addSendMan(this.form).then((successResponse) => {
-              let resData = successResponse.data;
-              if (resData.code === 200) {
+            addRecord(this.form).then((response) => {
+              if (response.code === 200) {
                 this.dialogFormVisible = false;
                 // 添加记录成功后再次查询列表
-                this.getSendManList();
+                this.getRecordList();
               } else {
-                this.$notify.error(resData.message);
+                this.$notify.error(response.message);
                 return false;
               }
             });
           } else {
-            editSendMan(this.form).then((successResponse) => {
-              let resData = successResponse.data;
-              if (resData.code === 200) {
-                this.getSendManList();
+            editRecord(this.form).then((response) => {
+              if (response.code === 200) {
+                this.getRecordList();
               } else {
-                this.$notify.error(resData.message);
+                this.$notify.error(response.message);
                 return false;
               }
             });
@@ -309,70 +290,70 @@ export default {
         }
       });
     },
-    getSendManList() {
-      listSendMan(this.tableQuery).then((successResponse) => {
-        let resData = successResponse.data;
-        if (resData.code === 200) {
-          this.tableData = resData.data.data;
-          this.total = resData.data.total;
+    getRecordList() {
+      listRecord(this.tableQuery).then((response) => {
+        let resData = response.data;
+        if (response.code === 200) {
+          this.tableData = resData.data;
+          this.total = resData.total;
         } else {
-          this.$message.error(resData.message);
+          this.$message.error(response.message);
           return false;
         }
       });
     },
-    handleSelectionChange() {},
+    handleSelectionChange() {
+    },
     handleSizeChange(val) {
       this.tableQuery.pageSize = val;
-      this.getSendManList();
+      this.getRecordList();
     },
     handleCurrentChange(val) {
       this.tableQuery.pageNum = val;
-      this.getSendManList();
+      this.getRecordList();
     },
     handleDelete(index, row) {
       console.log(index, row);
     },
     handleAdd() {
-      (this.dialog_title = "新增常用寄件人"),
+      (this.dialog_title = "新增吃喝消费"),
         (this.dialog_edit_type = 0),
         (this.dialogFormVisible = true);
       this.form = {
         name: "",
-        mobile: "",
-        phone: "",
+        amount: "",
         region: undefined,
         regionJson: "",
-        address: "",
-        company: "",
+        mark: "",
+        type: 1,
       };
     },
     handleEdit(index, row) {
       this.dialog_edit_type = 1;
-      this.dialog_title = "编辑常用寄件人";
+      this.dialog_title = "编辑吃喝消费";
       this.form = row;
       this.form.region = row.regionCode;
       this.dialogFormVisible = true;
     },
     successconfirm(id) {
-      delSendMan({ id: id })
-        .then((successResponse) => {
-          if (successResponse.data.code === 200) {
-            this.getSendManList();
-            this.$message.success(successResponse.data.data);
+      delRecord({id: id})
+        .then((response) => {
+          if (response.code === 200) {
+            this.getRecordList();
+            this.$message.success(response.data);
           } else {
-            this.$message.error(successResponse.data.message);
+            this.$message.error(response.message);
             return false;
           }
         })
         .catch((failResponse) => {
-          this.$message.error(failResponse.data.message);
+          this.$message.error(failResponse.message);
           return false;
         });
     },
   },
   created() {
-    this.getSendManList();
+    this.getRecordList();
   },
 };
 </script>

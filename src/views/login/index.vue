@@ -49,12 +49,12 @@ export default {
     loginSubmit() {
       login(this.loginForm.username, this.loginForm.password)
         .then((successResponse) => {
-          if (successResponse.data.code === 200) {
-            let data = successResponse.data.data;
+          if (successResponse.code === 200) {
+            let data = successResponse.data;
             store.dispatch("SetToken", data.token);
             this.$router.replace({ path: "/dashboard" });
-          } else if (successResponse.data.code === 500) {
-            let message = successResponse.data.message;
+          } else if (successResponse.code === 500) {
+            let message = successResponse.message;
             Message.error(message);
           }
         })

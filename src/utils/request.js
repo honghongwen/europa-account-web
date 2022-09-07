@@ -30,8 +30,8 @@ service.interceptors.response.use(
         duration: 3 * 1000
       })
 
-      // 401:未登录;
-      if (res.code === 401) {
+      // 403:未登录;
+      if (res.code === 403) {
         MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',

@@ -25,13 +25,13 @@
             ><i class="el-icon-s-platform"></i>日常账单</template
           >
           <router-link to="/accounting/eating">
-            <el-menu-item index="2-1"> 吃 </el-menu-item>
+            <el-menu-item index="2-1"> 吃喝 </el-menu-item>
           </router-link>
           <router-link to="/accounting/playing">
-            <el-menu-item index="2-2"> 玩 </el-menu-item>
+            <el-menu-item index="2-2"> 游玩 </el-menu-item>
           </router-link>
           <router-link to="/accounting/living">
-            <el-menu-item index="2-3"> 行 </el-menu-item>
+            <el-menu-item index="2-3"> 出行 </el-menu-item>
           </router-link>
           <router-link to="/accounting/other">
             <el-menu-item index="2-4"> 其他 </el-menu-item>
